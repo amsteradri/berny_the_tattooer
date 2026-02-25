@@ -23,7 +23,7 @@ export function Footer() {
               <div className="space-y-4">
                   <h4 className="font-bold text-sm uppercase tracking-wider text-zinc-500">Sígueme</h4>
                   <ul className="space-y-2 text-sm">
-                      <li><Link href="#" className="hover:text-white transition-colors">Instagram</Link></li>
+                      <li><a href="https://www.instagram.com/berny_the_tattooer/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a></li>
                       <li><Link href="#" className="hover:text-white transition-colors">YouTube</Link></li>
                       <li><Link href="#" className="hover:text-white transition-colors">TikTok</Link></li>
                   </ul>
@@ -31,8 +31,13 @@ export function Footer() {
           </div>
           <div className="border-t border-zinc-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-zinc-500">
               <p>© {new Date().getFullYear()} Berny The Tattooer. Todos los derechos reservados.</p>
-              <p>Diseñado con pasión.</p>
+              <div className="flex flex-col md:flex-row items-center gap-2">
+                  <p>Diseñado con pasión por <a href="https://amsteradri.github.io/portfolio_adgutier/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors underline decoration-zinc-700 underline-offset-4">Adrián Gutiérrez</a></p>
+                  <span className="hidden md:inline">•</span>
+                  <a href="https://www.linkedin.com/in/adriangutierrezsegovia/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
+              </div>
           </div>
+
       </div>
     </footer>
   )

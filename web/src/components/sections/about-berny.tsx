@@ -2,6 +2,8 @@
 
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import SplitText from "@/components/react-bits/SplitText"
+import ShinyText from "@/components/react-bits/ShinyText"
 
 export function AboutBerny() {
     return (
@@ -9,7 +11,26 @@ export function AboutBerny() {
             <div className="container mx-auto px-4 md:px-6 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <div className="space-y-6 order-2 lg:order-1">
-                        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">MÁS QUE TINTA, <br/>UNA FORMA DE VIDA.</h2>
+                        <div className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                           <SplitText 
+                             text="MÁS QUE TINTA," 
+                             className="!block"
+                             delay={50} 
+                             animationFrom={{ opacity: 0, transform: 'translate3d(0,30px,0)' }} 
+                             animationTo={{ opacity: 1, transform: 'translate3d(0,0,0)' }}
+                             threshold={0.3}
+                             rootMargin="-20px"
+                           />
+                           <SplitText 
+                             text="UNA FORMA DE VIDA." 
+                             className="!block mt-2"
+                             delay={60} 
+                             animationFrom={{ opacity: 0, transform: 'translate3d(0,30px,0)' }} 
+                             animationTo={{ opacity: 1, transform: 'translate3d(0,0,0)' }}
+                             threshold={0.3}
+                             rootMargin="-20px"
+                           />
+                        </div>
                         <p className="text-zinc-500 text-lg leading-relaxed dark:text-zinc-400">
                             Soy <span className="font-bold text-black dark:text-white">Berny</span>, tatuador profesional con más de 10 años de experiencia en el sector. Mi pasión es transformar ideas en arte sobre la piel y ahora, compartir ese conocimiento contigo.
                         </p>
@@ -18,13 +39,31 @@ export function AboutBerny() {
                         </p>
                         
                         <div className="grid grid-cols-2 gap-4 py-4">
-                             <div className="p-4 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-100 dark:border-zinc-800">
-                                 <h4 className="font-bold text-2xl mb-1">+10 Años</h4>
-                                 <p className="text-sm text-zinc-500">Experiencia</p>
+                             <div className="p-4 bg-zinc-900 rounded-lg border border-zinc-800">
+                                 <h4 className="font-bold text-2xl mb-1 text-white">
+                                    <ShinyText 
+                                        text="+10 Años" 
+                                        disabled={false} 
+                                        speed={4} 
+                                        className="" 
+                                        shineColor="#ffffff" 
+                                        color="#e4e4e7" // zinc-200, slightly off-white base to make shine pop? Or pure white base? Let's try pure white base and super white shine.
+                                    />
+                                 </h4>
+                                 <p className="text-sm text-zinc-400">Experiencia</p>
                              </div>
-                             <div className="p-4 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-100 dark:border-zinc-800">
-                                 <h4 className="font-bold text-2xl mb-1">+500</h4>
-                                 <p className="text-sm text-zinc-500">Alumnos</p>
+                             <div className="p-4 bg-zinc-900 rounded-lg border border-zinc-800">
+                                 <h4 className="font-bold text-2xl mb-1 text-white">
+                                    <ShinyText 
+                                        text="+500" 
+                                        disabled={false} 
+                                        speed={4} 
+                                        className="" 
+                                        shineColor="#ffffff" 
+                                        color="#e4e4e7"
+                                    />
+                                 </h4>
+                                 <p className="text-sm text-zinc-400">Alumnos</p>
                              </div>
                         </div>
 
@@ -32,6 +71,7 @@ export function AboutBerny() {
                              <Button size="lg" variant="default" className="w-full sm:w-auto">Conoce mi historia</Button>
                         </div>
                     </div>
+
                     
                     <div className="relative h-[500px] lg:h-[600px] w-full rounded-2xl overflow-hidden order-1 lg:order-2 shadow-2xl">
                         <Image 
@@ -43,7 +83,7 @@ export function AboutBerny() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         <div className="absolute bottom-6 left-6 text-white">
                             <p className="font-medium">Berny @ Studio</p>
-                            <p className="text-sm opacity-80">Madrid, España</p>
+                            <p className="text-sm opacity-80">Barcelona, España</p>
                         </div>
                     </div>
                 </div>

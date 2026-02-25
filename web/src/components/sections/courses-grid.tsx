@@ -4,8 +4,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import SplitText from "@/components/react-bits/SplitText"
+import BlurText from "@/components/react-bits/BlurText"
 
 const courses = [
+
   {
     id: 1,
     title: "Iniciación al Tatuaje",
@@ -37,17 +40,34 @@ const courses = [
 
 export function CoursesGrid() {
   return (
-    <section id="cursos" className="py-24 bg-zinc-50 dark:bg-zinc-900/50">
-      <div className="container mx-auto px-4 md:px-6">
+    <section id="cursos" className="relative py-24 bg-zinc-50 overflow-hidden">
+      <div className="container relative z-10 mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Gama de Cursos</h2>
-          <p className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed dark:text-zinc-400">
-            Elige el nivel que mejor se adapte a ti. Desde los fundamentos hasta las técnicas más complejas.
-          </p>
+          <div className="text-3xl font-bold tracking-tighter sm:text-5xl overflow-hidden">
+            <SplitText
+              text="Gama de Cursos"
+              className="inline-block"
+              delay={30}
+              animationFrom={{ opacity: 0, transform: 'translate3d(0,40px,0)' }}
+              animationTo={{ opacity: 1, transform: 'translate3d(0,0,0)' }}
+              threshold={0.1}
+              rootMargin="-50px"
+            />
+          </div>
+          <div className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed dark:text-zinc-400">
+            <BlurText
+              text="Elige el nivel que mejor se adapte a ti. Desde los fundamentos hasta las técnicas más complejas."
+              delay={20}
+              animateBy="words"
+              direction="bottom"
+              className="inline-block"
+            />
+          </div>
         </div>
         <div className="flex flex-wrap justify-center gap-8">
           {courses.map((course) => (
             <Card key={course.id} className="w-full md:w-[350px] group overflow-hidden border-zinc-200 dark:border-zinc-800 transition-all hover:shadow-xl dark:bg-zinc-950 flex flex-col p-0 gap-0">
+
               <div className="aspect-video relative overflow-hidden bg-zinc-200">
                  <Image 
                    src={course.image} 
