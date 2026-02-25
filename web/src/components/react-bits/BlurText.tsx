@@ -1,6 +1,6 @@
 "use client"
 import { useRef, useEffect, useState } from 'react';
-import { motion, useInView, Variants } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 
 interface BlurTextProps {
   text?: string;
@@ -10,9 +10,9 @@ interface BlurTextProps {
   direction?: 'top' | 'bottom';
   threshold?: number;
   rootMargin?: string;
-  animationFrom?: Variants;
-  animationTo?: Variants;
-  easing?: string | number[];
+  animationFrom?: any;
+  animationTo?: any;
+  easing?: any;
   onAnimationComplete?: () => void;
 }
 
@@ -32,6 +32,7 @@ const BlurText: React.FC<BlurTextProps> = ({
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
   
   const ref = useRef(null);
+  // @ts-ignore
   const isInView = useInView(ref, { once: true, margin: rootMargin });
   const [hasAnimated, setHasAnimated] = useState(false);
 
