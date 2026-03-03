@@ -6,7 +6,7 @@ export function Footer() {
       <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div className="col-span-1 md:col-span-2 space-y-4">
-                  <h3 className="font-bold text-xl uppercase tracking-widest">Berny The Tattooer</h3>
+                  <h3 className="font-bold text-xl uppercase tracking-widest italic">ART WORX ACADEMY</h3>
                   <p className="max-w-xs text-sm text-zinc-400">
                       Academia de tatuaje profesional. Aprende el arte con metodología probada y práctica real.
                   </p>
@@ -30,7 +30,7 @@ export function Footer() {
               </div>
           </div>
           <div className="border-t border-zinc-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-zinc-500">
-              <p>© {new Date().getFullYear()} Berny The Tattooer. Todos los derechos reservados.</p>
+              <p>© {new Date().getFullYear()} ART WORX ACADEMY. Todos los derechos reservados.</p>
               <div className="flex flex-col md:flex-row items-center gap-2">
                   <p>Diseñado con pasión por <a href="https://amsteradri.github.io/portfolio_adgutier/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors underline decoration-zinc-700 underline-offset-4">Adrián Gutiérrez</a></p>
                   <span className="hidden md:inline">•</span>

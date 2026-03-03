@@ -4,10 +4,22 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import SplitText from "@/components/react-bits/SplitText"
 import ShinyText from "@/components/react-bits/ShinyText"
+import { motion, useScroll, useTransform } from "framer-motion"
+import { useRef } from "react"
 
 export function AboutBerny() {
+    const ref = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ["start end", "end start"]
+    });
+    
+    // Efecto parallax vertical suave para la imagen
+    const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
+    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.9, 1], [0, 1, 1, 0]);
+
     return (
-        <section id="sobre-mi" className="py-24 bg-white dark:bg-black overflow-hidden relative">
+        <section id="sobre-mi" ref={ref} className="py-24 bg-white dark:bg-black overflow-hidden relative">
             <div className="container mx-auto px-4 md:px-6 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <div className="space-y-6 order-2 lg:order-1">
@@ -32,10 +44,10 @@ export function AboutBerny() {
                            />
                         </div>
                         <p className="text-zinc-500 text-lg leading-relaxed dark:text-zinc-400">
-                            Soy <span className="font-bold text-black dark:text-white">Berny</span>, tatuador profesional con más de 10 años de experiencia en el sector. Mi pasión es transformar ideas en arte sobre la piel y ahora, compartir ese conocimiento contigo.
+                            Somos <span className="font-bold text-black dark:text-white">ART WORX ACADEMY</span>, un espacio donde la experiencia y la pasión convergen. Liderados por Berny, con más de una década en el sector, nuestra misión es transformar la enseñanza del tatuaje.
                         </p>
                         <p className="text-zinc-500 text-lg leading-relaxed dark:text-zinc-400">
-                            He desarrollado una metodología propia que simplifica los procesos más complejos, permitiéndote avanzar más rápido y con una base sólida.
+                            Hemos desarrollado una metodología exclusiva que simplifica los procesos técnicos y artísticos más complejos, permitiéndote construir una carrera sólida y avanzar más rápido en tu camino como artista.
                         </p>
                         
                         <div className="grid grid-cols-2 gap-4 py-4">
@@ -68,12 +80,15 @@ export function AboutBerny() {
                         </div>
 
                         <div className="pt-4 flex gap-4">
-                             <Button size="lg" variant="default" className="w-full sm:w-auto">Conoce mi historia</Button>
+                             <Button size="lg" variant="default" className="w-full sm:w-auto">Conoce ART WORX</Button>
                         </div>
                     </div>
 
                     
-                    <div className="relative h-[500px] lg:h-[600px] w-full rounded-2xl overflow-hidden order-1 lg:order-2 shadow-2xl">
+                    <motion.div 
+                        style={{ y, opacity }} 
+                        className="relative h-[500px] lg:h-[600px] w-full rounded-2xl overflow-hidden order-1 lg:order-2 shadow-2xl"
+                    >
                         <Image 
                             src="https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?q=80&w=2574&auto=format&fit=crop" 
                             alt="Berny tatuando" 
@@ -85,7 +100,7 @@ export function AboutBerny() {
                             <p className="font-medium">Berny @ Studio</p>
                             <p className="text-sm opacity-80">Barcelona, España</p>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </section>

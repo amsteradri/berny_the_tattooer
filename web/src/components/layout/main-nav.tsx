@@ -22,8 +22,8 @@ export function MainNav() {
 
   const navLinks = [
     { name: "Cursos", href: "#cursos" },
-    { name: "Sobre Mí", href: "#sobre-mi" },
-    { name: "Preguntas", href: "#faq" },
+    { name: "Sobre Nosotros", href: "#sobre-mi" },
+    { name: "Newsletter", href: "#newsletter" },
   ]
 
   return (
@@ -31,37 +31,34 @@ export function MainNav() {
       <motion.header 
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out border-b border-transparent",
-          scrolled ? "bg-black/80 backdrop-blur-md border-white/10 py-2 shadow-lg" : "bg-transparent py-4"
+          // Make it semi-opaque and blurry even before scroll to improve visibility
+          scrolled || isOpen ? "bg-zinc-950/90 backdrop-blur-md border-white/10 py-2 shadow-lg" : "bg-black/40 backdrop-blur-sm py-4 border-white/5"
         )}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="container mx-auto flex items-center justify-between px-4 md:px-8 relative h-16">
+        <div className="container mx-auto flex items-center justify-between px-4 md:px-8 relative h-16 w-full max-w-[1400px]">
           
-          {/* Logo Area */}
-          <Link href="/" className="flex items-center z-50">
-            <span className="font-extrabold text-2xl tracking-tighter text-white uppercase italic">
-              Berny<span className="text-primary-foreground/80">.</span>
+          {/* Logo Area - moved more to the left */}
+          <Link href="/" className="flex items-center z-50 mr-8">
+            <span className="font-extrabold text-xl md:text-2xl tracking-tighter text-white uppercase italic">
+              ART WORX ACADEMY<span className="text-primary-foreground/80">.</span>
             </span>
           </Link>
 
           {/* Desktop Navigation - Centered */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center">
+          <div className="hidden md:absolute md:left-1/2 md:-translate-x-1/2 md:flex items-center">
             <nav className="flex items-center gap-8">
             {navLinks.map((link) => (
-              <button 
+              <Link 
                 key={link.name} 
-                onClick={(e) => {
-                  e.preventDefault();
-                  const element = document.querySelector(link.href);
-                  element?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="text-sm font-medium text-zinc-400 hover:text-white transition-colors relative group bg-transparent border-0 cursor-pointer"
+                href={link.href}
+                className="text-sm font-medium text-zinc-400 hover:text-white transition-colors relative group"
               >
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full"></span>
-              </button>
+              </Link>
             ))}
             </nav>
           </div>
@@ -76,10 +73,10 @@ export function MainNav() {
 
           {/* Mobile Menu Toggle */}
           <button 
-            className="md:hidden text-white z-50 p-2 ml-auto"
+            className="md:hidden text-white z-50 p-2"
             onClick={() => setIsOpen(!isOpen)}
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
       </motion.header>
@@ -88,26 +85,29 @@ export function MainNav() {
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-zinc-950/95 backdrop-blur-xl md:hidden pt-24 px-6 flex flex-col items-center gap-8"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "100vh" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="fixed inset-0 z-40 bg-zinc-950 md:hidden flex flex-col pt-24 px-6 overflow-hidden"
           >
-             {navLinks.map((link) => (
-              <Link 
-                key={link.name} 
-                href={link.href} 
-                onClick={() => setIsOpen(false)}
-                className="text-2xl font-bold text-white hover:text-zinc-300"
-              >
-                {link.name}
-              </Link>
-            ))}
-             <div className="flex flex-col w-full gap-4 mt-8">
-                 <Button variant="outline" className="w-full border-zinc-700 text-white hover:bg-zinc-800" onClick={() => setIsOpen(false)}>
+             <nav className="flex flex-col gap-6 items-center w-full mt-8">
+               {navLinks.map((link) => (
+                <Link 
+                  key={link.name} 
+                  href={link.href} 
+                  onClick={() => setIsOpen(false)}
+                  className="text-3xl font-black text-white hover:text-zinc-400 transition-colors uppercase tracking-tight"
+                >
+                  {link.name}
+                </Link>
+              ))}
+             </nav>
+             
+             <div className="flex flex-col w-full gap-4 mt-12 max-w-xs mx-auto">
+                 <Button variant="outline" size="lg" className="w-full border-zinc-700 text-white bg-transparent hover:bg-zinc-800 text-lg py-6" onClick={() => setIsOpen(false)}>
                     Inicia Sesión
                  </Button>
-                 <Button className="w-full bg-white text-black hover:bg-zinc-200" onClick={() => setIsOpen(false)}>
+                 <Button size="lg" className="w-full bg-white text-black hover:bg-zinc-200 text-lg py-6 font-bold" onClick={() => setIsOpen(false)}>
                     Empezar Ahora
                  </Button>
              </div>

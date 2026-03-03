@@ -8,8 +8,8 @@ import { Footer } from "@/components/layout/footer";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Berny The Tattooer Academy | Cursos de Tatuaje Profesional",
-  description: "Aprende el arte del tatuaje con Berny. Cursos online y presenciales para todos los niveles.",
+  title: "ART WORX ACADEMY | Cursos de Tatuaje Profesional",
+  description: "Aprende el arte del tatuaje con Berny en ART WORX ACADEMY. Cursos online y presenciales para todos los niveles.",
 };
 
 export default function RootLayout({

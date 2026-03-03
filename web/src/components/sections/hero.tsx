@@ -60,7 +60,7 @@ export function HeroSection() {
                        Ver Cursos Disponibles
                    </Button>
                    <Button variant="outline" size="lg" className="text-lg px-8 py-6 rounded-full border-2 border-white bg-transparent text-white hover:bg-white hover:text-black transition-all">
-                       Conoce a Berny <ArrowRight className="ml-2 w-5 h-5" />
+                       Conoce ART WORX <ArrowRight className="ml-2 w-5 h-5" />
                    </Button>
                </div>
             </motion.div>
