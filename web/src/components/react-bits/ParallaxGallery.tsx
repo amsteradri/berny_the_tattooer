@@ -40,10 +40,10 @@ export default function ParallaxGallery() {
     return () => window.removeEventListener("resize", resize);
   }, []);
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, dimension.height * 1.5]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, dimension.height * 1.8]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, dimension.height * 1.6]);
-  const y4 = useTransform(scrollYProgress, [0, 1], [0, dimension.height * 1.7]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, dimension.height * 1.25]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, dimension.height * 1.7]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, dimension.height * 1.5]);
+  const y4 = useTransform(scrollYProgress, [0, 1], [0, dimension.height * 1.6]);
 
   return (
     <div className="bg-zinc-950 min-h-[150vh] overflow-hidden relative">
