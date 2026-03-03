@@ -10,7 +10,7 @@ import ShinyText from "@/components/react-bits/ShinyText"
 
 export function HeroSection() {
     return (
-        <section className="relative w-full h-screen flex items-center justify-center bg-zinc-950 text-white overflow-hidden">
+        <section className="relative w-full h-screen flex items-center justify-center bg-zinc-950 text-white overflow-hidden pt-20 md:pt-24">
             {/* Background Texture/Gradient */}
             <div className="absolute inset-0 bg-black/60 z-[5]"></div>
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1608666599953-b951163495f4?q=80&w=2574&auto=format&fit=crop')] bg-cover bg-center opacity-40"></div>
@@ -19,7 +19,7 @@ export function HeroSection() {
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                transition={{ duration: 1 }}
-               className="relative z-10 container mx-auto px-4 md:px-6 text-center space-y-8 flex flex-col items-center"
+               className="relative z-10 container mx-auto px-4 md:px-6 text-center space-y-6 md:space-y-8 flex flex-col items-center"
             >
                <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-tight drop-shadow-2xl flex flex-col items-center">
                   <SplitText 
