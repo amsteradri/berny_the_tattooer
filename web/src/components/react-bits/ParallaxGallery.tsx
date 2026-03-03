@@ -1,10 +1,8 @@
 "use client";
 
 import { useScroll, useTransform, motion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
-import useDimension from "@/hooks/useDimension"; // Assuming this hook exists or I'll implement inline. I will implement inline for simplicity.
-import { useEffect, useState } from "react";
 
 const images = [
   "https://images.unsplash.com/photo-1482328177731-274399da39f0?q=80&w=1200&auto=format&fit=crop", // 1. Fortune and Glory (Allef Vinicius)
