@@ -1,17 +1,18 @@
 'use client'
 
-import { useState, useTransition, useCallback } from "react"
+import { useState, useTransition } from "react"
 import { completeSectionAction } from "@/app/actions/courses"
-import { getSignedVideoUrl } from "@/app/actions/video"
 import { CourseSection, SectionContentBlock } from "@/lib/courses-data"
-import { CheckCircle, Lock, Clock, ChevronDown, Loader2, AlertCircle, Lightbulb, TriangleAlert, Play } from "lucide-react"
+import { CheckCircle, Lock, Clock, ChevronDown, Loader2, AlertCircle, Lightbulb, TriangleAlert } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ProtectedVideoPlayer } from "./protected-video-player"
 
 interface SectionAccordionProps {
   sections: CourseSection[]
   completedSections: string[]
   enrollmentId: string
   courseSlug: string
+  userEmail?: string
 }
 
 // ── Rich content renderer ────────────────────────────────────────────────────
@@ -55,108 +56,13 @@ function ContentBlock({ block }: { block: SectionContentBlock }) {
   }
 }
 
-// ── Secure video player (Supabase Storage — signed URL expiring in 1h) ───────
-// The URL is generated server-side and expires. Sharing it is useless.
-// No YouTube link, no external navigation possible.
-function SecureVideoPlayer({
-  videoPath,
-  enrollmentId,
-}: {
-  videoPath: string
-  enrollmentId: string
-}) {
-  const [signedUrl, setSignedUrl] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const loadVideo = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    const result = await getSignedVideoUrl(videoPath, enrollmentId)
-    if ("url" in result) {
-      setSignedUrl(result.url)
-    } else {
-      setError(result.error)
-    }
-    setLoading(false)
-  }, [videoPath, enrollmentId])
-
-  if (error) {
-    return (
-      <div className="w-full aspect-video rounded-xl bg-zinc-800 flex items-center justify-center">
-        <p className="text-red-400 text-sm">{error}</p>
-      </div>
-    )
-  }
-
-  if (!signedUrl) {
-    return (
-      <div className="w-full aspect-video rounded-xl bg-zinc-900 border border-zinc-800 flex flex-col items-center justify-center gap-3">
-        <button
-          onClick={loadVideo}
-          disabled={loading}
-          className="w-16 h-16 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 transition-colors flex items-center justify-center disabled:opacity-50"
-        >
-          {loading ? (
-            <Loader2 className="w-7 h-7 text-white animate-spin" />
-          ) : (
-            <Play className="w-7 h-7 text-white ml-1" />
-          )}
-        </button>
-        <span className="text-zinc-400 text-xs">
-          {loading ? "Cargando vídeo..." : "Reproducir vídeo"}
-        </span>
-      </div>
-    )
-  }
-
-  return (
-    <div className="w-full rounded-xl overflow-hidden bg-black aspect-video">
-      {/* controlsList="nodownload" hides the download button */}
-      {/* disablePictureInPicture prevents popping out of the page */}
-      {/* onContextMenu blocks right-click > "Save video as" */}
-      <video
-        src={signedUrl}
-        controls
-        controlsList="nodownload"
-        disablePictureInPicture
-        onContextMenu={(e) => e.preventDefault()}
-        className="w-full h-full"
-        playsInline
-      />
-    </div>
-  )
-}
-
-// ── Temporary YouTube embed — ONLY for testing ────────────────────────────────
-// YouTube iframes ALWAYS show "Watch on YouTube" — it CANNOT be removed.
-// Replace videoId with videoPath (Supabase Storage) for real protected content.
-function YouTubeEmbed({ videoId }: { videoId: string }) {
-  return (
-    <div className="w-full rounded-xl overflow-hidden bg-black aspect-video relative">
-      <iframe
-        src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`}
-        title="Vídeo temporal (demo)"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        className="w-full h-full"
-      />
-      <div className="absolute bottom-0 left-0 right-0 bg-zinc-900/90 border-t border-yellow-800/50 px-3 py-1.5 flex items-center gap-2 pointer-events-none">
-        <TriangleAlert className="w-3 h-3 text-yellow-500 flex-shrink-0" />
-        <span className="text-yellow-400 text-xs font-medium">
-          Vídeo de prueba — el vídeo real se subirá próximamente
-        </span>
-      </div>
-    </div>
-  )
-}
-
 // ── Main component ───────────────────────────────────────────────────────────
 export default function SectionAccordion({
   sections,
   completedSections: initialCompleted,
   enrollmentId,
   courseSlug,
+  userEmail,
 }: SectionAccordionProps) {
   const [completed, setCompleted] = useState<string[]>(initialCompleted)
   const [openSection, setOpenSection] = useState<string | null>(null)
@@ -286,17 +192,14 @@ export default function SectionAccordion({
                 {/* ── Body ── */}
                 {isOpen && (
                   <div className="border-t border-zinc-800">
-                    {/* Video: Supabase (secure) takes priority, YouTube is fallback/testing only */}
-                    {(section.videoPath || section.videoId) && (
+                    {/* Video: Supabase (secure) takes priority */}
+                    {section.videoPath && (
                       <div className="px-5 pt-5">
-                        {section.videoPath ? (
-                          <SecureVideoPlayer
-                            videoPath={section.videoPath}
-                            enrollmentId={enrollmentId}
-                          />
-                        ) : (
-                          <YouTubeEmbed videoId={section.videoId!} />
-                        )}
+                        <ProtectedVideoPlayer
+                          videoPath={section.videoPath}
+                          enrollmentId={enrollmentId}
+                          userEmail={userEmail}
+                        />
                       </div>
                     )}
 

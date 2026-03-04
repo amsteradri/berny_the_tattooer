@@ -67,6 +67,7 @@ export default async function CourseContentPage({ params }: PageProps) {
         completedSections={completedSections}
         enrollmentId={enrollmentId}
         courseSlug={courseData.slug}
+        userEmail={session.userId}
       />
     </div>
   )
