@@ -1,80 +1,131 @@
 # Berny The Tattooer - Art Worx Academy Platform
 
-Plataforma web educativa y portfolio para **Berny**, tatuador profesional. Este proyecto busca revolucionar la enseñanza del tatuaje mediante una experiencia de usuario (UX) inmersiva y de alta calidad visual.
+Plataforma web educativa y portfolio para **Berny**, tatuador profesional. Combina un portfolio visual de alto impacto con un sistema completo de cursos online (LMS) con autenticación propia, base de datos y seguimiento de progreso.
 
-## Características Clave del Frontend (Actual)
+> ⚠️ **Proyecto en desarrollo activo (~30% completado).** La base técnica, autenticación y esqueleto del LMS están funcionales. Quedan pendientes pagos, contenido real, vídeos, chat, calendario, panel de admin, entregables y mucho más.
 
-Esta aplicación está construida con las tecnologías más modernas para garantizar rendimiento y estética:
+## Stack Tecnológico
 
-*   **Next.js 16 (App Router):** Framework React para producción.
-*   **Framer Motion & GSAP:** Animaciones complejas (Scroll Velocity, Parallax, Text Reveals).
-*   **Tailwind CSS:** Diseño utilitario para un desarrollo rápido y consistente.
-*   **Diseño Responsive:** Adaptado perfectamente a móviles y escritorio.
-
-### Componentes Visuales Destacados
-*   **Hero Section:** Animación de entrada impactante.
-*   **Scroll Velocity Marquee:** Texto infinito que reacciona a la velocidad del scroll.
-*   **Parallax Gallery:** Galería vertical estilo "Tattoox" con columnas flotantes y revelado interactivo.
-*   **Shiny & Split Text:** Efectos de texto avanzados para títulos y contadores.
-
-## Instalación y Desarrollo
-
-1.  Clonar el repositorio.
-2.  Navegar al directorio web:
-    ```bash
-    cd web
-    ```
-3.  Instalar dependencias:
-    ```bash
-    npm install
-    ```
-4.  Iniciar el servidor de desarrollo:
-    ```bash
-    npm run dev
-    ```
-
-## Estado del Proyecto
-
-Consultar el archivo `ESTADO_Y_PRECIO_WEB.md` en la raíz del proyecto para un desglose detallado del progreso y valoración.
+- **Next.js 16 (App Router)** — Framework React con Server Components y Server Actions
+- **TypeScript** — Código tipado y robusto
+- **Tailwind CSS v4 + Shadcn UI** — Diseño responsive y componentes reutilizables
+- **Supabase (PostgreSQL + Storage)** — BD: usuarios, cursos, inscripciones, progreso. Storage: bucket privado `course-videos` para vídeos protegidos
+- **JWT personalizado (`jose`)** — Autenticación propia con cookies HTTP-only (sin Supabase Auth)
+- **bcrypt** — Hash seguro de contraseñas
+- **GSAP + Framer Motion** — Animaciones premium (Parallax, ScrollVelocity, SplitText, BlurText)
 
 ---
 
-Original Next.js Readme:
+## Funcionalidades Implementadas
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+### 🎨 Landing Page / Portfolio
+- Hero con animaciones de entrada
+- Marquesina infinita reactiva al scroll (ScrollVelocity)
+- Galería Parallax estilo Tattoox con columnas flotantes
+- Sección "Sobre Berny" con contadores animados
+- Grid de cursos con cards, badges y precios
+- Footer corporativo
+- Newsletter (UI)
 
-## Getting Started
+### 🔐 Autenticación
+- Registro de usuario (`/registro`) con hash bcrypt
+- Login (`/login`) con sesión JWT en cookie HTTP-only
+- Logout con Server Action
+- Rutas protegidas server-side (redirect si no hay sesión)
 
-First, run the development server:
+### 👤 Perfil de Usuario (`/perfil`)
+- Datos del usuario (nombre, email, fecha de registro)
+- Contador de cursos inscritos (dato real de la BD)
+- Acceso rápido a "Mis Cursos"
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 📚 Catálogo de Cursos (`/cursos/[slug]`)
+- Página detallada por curso: descripción, nivel, duración, materiales, técnicas
+- Botón de inscripción gratuita si no está inscrito
+- Redirección a "Mis Cursos" si ya está inscrito
+
+### 🎓 Mis Cursos (`/mis-cursos`)
+- Lista de cursos inscritos con progreso real desde BD
+- Botón "Comenzar" o "Continuar" según el progreso
+
+### 📖 Visor de Curso (`/mis-cursos/[enrollmentId]`)
+- Acordeón de secciones con desbloqueo secuencial
+- Contenido rico por sección: encabezados, párrafos, listas, tips (💡) y advertencias (⚠️) — 19 secciones totales
+- Botón "Marcar como Completado" con estado de carga
+- **Persistencia real en BD**: el progreso se guarda en `user_courses.completed_sections[]` y `progress`
+- **Validación server-side**: no se puede completar una sección si la anterior no está marcada en la BD (anti-trampa)
+- Barra de progreso en tiempo real (actualización optimista confirmada por servidor)
+- Las secciones completadas siguen accesibles para revisión
+
+### 🎬 Sistema de Vídeo Protegido
+- **`SecureVideoPlayer`** (producción): vídeos en Supabase Storage (bucket privado `course-videos`)
+  - URL firmada generada server-side con caducidad de **1 hora** — compartirla es inútil
+  - Reproduce con `<video>` nativo: sin botón de descarga, sin clic derecho, sin Picture-in-Picture
+  - Validación de inscripción en servidor antes de generar la URL
+- **`YouTubeEmbed`** (testing): embed temporal con banner de aviso visible
+- Switching automático: `videoPath` → player seguro | `videoId` → YouTube
+
+---
+
+## Base de Datos (Supabase)
+
+### Tablas
+| Tabla | Descripción |
+|-------|-------------|
+| `users` | Usuarios registrados (id, nombre, email, password_hash) |
+| `courses` | Catálogo de cursos (slug, título, nivel, precio, imagen...) |
+| `user_courses` | Inscripciones: `user_id`, `course_id`, `progress`, `completed_sections TEXT[]`, `status`, `enrolled_at` |
+
+### Storage
+| Bucket | Acceso | Descripción |
+|--------|--------|-------------|
+| `course-videos` | **Privado** | Vídeos de los cursos — acceso sólo mediante URLs firmadas (1h) |
+
+Estructura de ficheros en el bucket:
+```
+course-videos/
+├── iniciacion/   (seccion-1.mp4, seccion-2.mp4, ...)
+├── sombreado/    (seccion-1.mp4, ...)
+└── realismo/     (seccion-1.mp4, ...)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Setup inicial
+Ejecutar `supabase_courses.sql` en el SQL Editor de Supabase para crear las tablas e insertar los 3 cursos iniciales.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Si la tabla `user_courses` ya existía antes de añadir `completed_sections`, ejecutar `supabase_migration.sql`.
 
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Instalación y Desarrollo
 
-## Learn More
+```bash
+# 1. Ir al directorio web
+cd web
 
-To learn more about Next.js, take a look at the following resources:
+# 2. Instalar dependencias
+npm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# 3. Crear variables de entorno
+cp .env.example .env.local
+# Rellenar NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY y JWT_SECRET
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# 4. Iniciar servidor de desarrollo
+npm run dev
+```
 
-## Deploy on Vercel
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Estado del Proyecto
+
+**Progreso actual: ~30%** — Consultar `ESTADO_Y_PRECIO_WEB.md` en la raíz del proyecto para el desglose detallado del progreso y valoración económica (presupuesto total: **~3.500€**).
+
+### Pendiente (resumen)
+- Pasarela de pagos (Stripe)
+- Contenido y vídeos reales de los cursos
+- Mejora general de UX/UI
+- Chat en tiempo real con Berny
+- Reservas de reuniones (Google Calendar / Calendly)
+- Panel de administración completo
+- Corrección de proyectos entregables por admin
+- Exámenes, certificados, SEO, Analytics, seguridad avanzada
