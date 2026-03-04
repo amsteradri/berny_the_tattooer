@@ -2,54 +2,73 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { LogOut, User as UserIcon, BookOpen } from "lucide-react"
 
-export function MainNav() {
+interface MainNavProps {
+  user?: any; // We can improve type later
+}
+
+export function MainNav({ user }: MainNavProps) {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = React.useState(false)
   const [scrolled, setScrolled] = React.useState(false)
+  
+  const hasSession = !!user;
+
+  console.log("MainNav Render - User Prop:", user);
 
   React.useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20)
     }
     window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    return () => {
+        window.removeEventListener("scroll", handleScroll);
+    } 
   }, [])
 
   const navLinks = [
-    { name: "Cursos", href: "#cursos" },
-    { name: "Sobre Nosotros", href: "#sobre-mi" },
-    { name: "Newsletter", href: "#newsletter" },
+    { name: "Cursos", href: "/#cursos" },
+    { name: "Sobre Nosotros", href: "/#sobre-mi" },
+    { name: "Newsletter", href: "/#newsletter" },
   ]
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const targetId = href.replace('#', '');
-    const element = document.getElementById(targetId);
-    if (element) {
-      const headerOffset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+    if (pathname === '/') {
+       e.preventDefault();
+       const elementId = href.split('#')[1];
+       if (elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+              const headerOffset = 80;
+              const elementPosition = element.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+              });
+            }
+       }
+       setIsOpen(false);
     }
-    setIsOpen(false);
   };
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-    setIsOpen(false);
+    if (pathname === '/') {
+        e.preventDefault();
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+        setIsOpen(false);
+    }
   };
 
   return (
@@ -57,8 +76,7 @@ export function MainNav() {
       <motion.header 
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out border-b border-transparent",
-          // Make it semi-opaque and blurry even before scroll to improve visibility
-          scrolled || isOpen ? "bg-zinc-950/90 backdrop-blur-md border-white/10 py-2 shadow-lg" : "bg-black/40 backdrop-blur-sm py-4 border-white/5"
+          scrolled || isOpen ? "bg-zinc-950 backdrop-blur-md border-white/10 py-2 shadow-lg" : "bg-zinc-950 py-4 border-white/5"
         )}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -67,17 +85,17 @@ export function MainNav() {
         <div className="container mx-auto flex items-center justify-between px-4 md:px-8 relative h-16 w-full max-w-[1400px]">
           
           {/* Logo Area - moved more to the left */}
-          <a href="#" onClick={handleLogoClick} className="flex items-center z-50 mr-8 cursor-pointer">
+          <Link href="/" onClick={handleLogoClick} className="flex items-center z-50 mr-8 cursor-pointer">
             <span className="font-extrabold text-xl md:text-2xl tracking-tighter text-white uppercase italic">
               ART WORX ACADEMY<span className="text-primary-foreground/80">.</span>
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation - Centered */}
           <div className="hidden md:absolute md:left-1/2 md:-translate-x-1/2 md:flex items-center">
             <nav className="flex items-center gap-8">
             {navLinks.map((link) => (
-              <a 
+              <Link 
                 key={link.name} 
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
@@ -85,17 +103,43 @@ export function MainNav() {
               >
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full"></span>
-              </a>
+              </Link>
             ))}
             </nav>
           </div>
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-4 ml-auto">
-             <Button variant="ghost" className="text-zinc-300 hover:text-white hover:bg-white/10 font-medium">Inicia Sesión</Button>
-             <Button className="bg-white text-black hover:bg-zinc-200 transition-transform hover:scale-105 font-bold rounded-full px-6">
-                Empezar Ahora
-             </Button>
+             {!hasSession ? (
+               <>
+                 <Link href="/login">
+                   <Button variant="ghost" className="text-zinc-300 hover:text-white hover:bg-white/10 font-medium">Inicia Sesión</Button>
+                 </Link>
+                 <Link href="/signup">
+                   <Button className="bg-white text-black hover:bg-zinc-200 transition-transform hover:scale-105 font-bold rounded-full px-6">
+                      Empezar Ahora
+                   </Button>
+                 </Link>
+               </>
+             ) : (
+               <>
+                   <Link href="/mis-cursos" passHref>
+                     <Button 
+                        variant="ghost" 
+                        className="text-zinc-300 hover:text-white hover:bg-white/10 font-medium gap-2"
+                     >
+                       <BookOpen size={16} /> Mis Cursos
+                     </Button>
+                   </Link>
+                   <Link href="/perfil" passHref>
+                     <Button 
+                        className="bg-white text-black hover:bg-zinc-200 transition-transform hover:scale-105 font-bold rounded-full px-6 gap-2"
+                     >
+                        <UserIcon size={16} /> Perfil
+                     </Button>
+                   </Link>
+               </>
+             )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -119,24 +163,59 @@ export function MainNav() {
           >
              <nav className="flex flex-col gap-6 items-center w-full mt-8">
                {navLinks.map((link) => (
-                <a 
+                <Link 
                   key={link.name} 
                   href={link.href} 
                   onClick={(e) => handleNavClick(e, link.href)}
                   className="text-3xl font-black text-white hover:text-zinc-400 transition-colors uppercase tracking-tight cursor-pointer"
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
              </nav>
              
              <div className="flex flex-col w-full gap-4 mt-12 max-w-xs mx-auto">
-                 <Button variant="outline" size="lg" className="w-full border-zinc-700 text-white bg-transparent hover:bg-zinc-800 text-lg py-6" onClick={() => setIsOpen(false)}>
-                    Inicia Sesión
-                 </Button>
-                 <Button size="lg" className="w-full bg-white text-black hover:bg-zinc-200 text-lg py-6 font-bold" onClick={() => setIsOpen(false)}>
-                    Empezar Ahora
-                 </Button>
+                 {!hasSession ? (
+                   <>
+                     <Link href="/login" onClick={() => setIsOpen(false)} passHref>
+                        <Button 
+                            variant="outline" 
+                            size="lg" 
+                            className="w-full border-zinc-700 text-white bg-transparent hover:bg-zinc-800 text-lg py-6"
+                        >
+                            Inicia Sesión
+                        </Button>
+                     </Link>
+                     <Link href="/signup" onClick={() => setIsOpen(false)} passHref>
+                        <Button 
+                            size="lg" 
+                            className="w-full bg-white text-black hover:bg-zinc-200 text-lg py-6 font-bold"
+                        >
+                            Empezar Ahora
+                        </Button>
+                     </Link>
+                   </>
+                 ) : (
+                   <>
+                     <Link href="/mis-cursos" onClick={() => setIsOpen(false)} passHref>
+                       <Button 
+                            variant="outline" 
+                            size="lg" 
+                            className="w-full border-zinc-700 text-white bg-transparent hover:bg-zinc-800 text-lg py-6 gap-3"
+                        >
+                          <BookOpen size={20} /> Mis Cursos
+                       </Button>
+                     </Link>
+                     <Link href="/perfil" onClick={() => setIsOpen(false)} passHref>
+                       <Button 
+                            size="lg" 
+                            className="w-full bg-white text-black hover:bg-zinc-200 text-lg py-6 font-bold gap-3"
+                        >
+                          <UserIcon size={20} /> Mi Perfil
+                       </Button>
+                     </Link>
+                   </>
+                 )}
              </div>
           </motion.div>
         )}

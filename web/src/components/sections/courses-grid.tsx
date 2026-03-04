@@ -4,39 +4,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import Link from "next/link"
 import SplitText from "@/components/react-bits/SplitText"
 import BlurText from "@/components/react-bits/BlurText"
-
-const courses = [
-
-  {
-    id: 1,
-    title: "Iniciación al Tatuaje",
-    level: "Principiante",
-    description: "Todo lo que necesitas saber antes de coger una máquina. Higiene, materiales y diseño básico.",
-    price: "197€",
-    tags: ["Teoría", "Higiene", "Línea"],
-    image: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?q=80&w=2670&auto=format&fit=crop"
-  },
-  {
-    id: 2,
-    title: "Técnicas de Sombreado",
-    level: "Intermedio",
-    description: "Domina el Black & Grey. Aprende a crear volúmenes, texturas y transiciones suaves.",
-    price: "247€",
-    tags: ["Black & Grey", "Texturas", "Sombreado"],
-    image: "https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?q=80&w=2574&auto=format&fit=crop"
-  },
-  {
-    id: 3,
-    title: "Realismo Avanzado",
-    level: "Avanzado",
-    description: "Lleva tu arte al siguiente nivel. Retratos, detalles hiperrealistas y composición compleja.",
-    price: "397€",
-    tags: ["Realismo", "Retratos", "Avanzado"],
-    image: "https://images.unsplash.com/photo-1562962230-16e4623d36e6?q=80&w=2574&auto=format&fit=crop"
-  }
-]
+import { courses } from "@/lib/courses-data"
 
 export function CoursesGrid() {
   return (
@@ -96,8 +67,10 @@ export function CoursesGrid() {
                 </CardDescription>
               </CardContent>
               <CardFooter className="pb-6 px-6 pt-4 mt-auto">
-                <Button className="w-full bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200" size="lg">
-                    Ver Detalles
+                <Button asChild className="w-full bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200" size="lg">
+                    <Link href={`/cursos/${course.slug}`}>
+                        Ver Detalles
+                    </Link>
                 </Button>
               </CardFooter>
             </Card>

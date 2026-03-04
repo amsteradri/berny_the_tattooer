@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { MainNav } from "@/components/layout/main-nav";
 import { Footer } from "@/components/layout/footer";
+import { getSession } from "@/lib/session";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -12,19 +13,22 @@ export const metadata: Metadata = {
   description: "Aprende el arte del tatuaje con Berny en ART WORX ACADEMY. Cursos online y presenciales para todos los niveles.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+  console.log('RootLayout Session:', session);
+  
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={cn(
         "min-h-screen bg-background font-sans antialiased text-foreground flex flex-col",
         inter.variable
       )}>
-        <MainNav />
-        <main className="flex-1">
+        <MainNav user={session} />
+        <main className="flex-1 pt-24">
            {children}
         </main>
         <Footer />
