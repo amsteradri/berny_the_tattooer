@@ -51,7 +51,7 @@ export const courses: Course[] = [
         title: "Bienvenida e Introducción",
         description: "Presentación del curso, objetivos y lo que aprenderás. Conoce la historia del tatuaje y su evolución hasta hoy.",
         imageUrl: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?q=80&w=2670&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "15 min",
         content: [
           {
@@ -103,7 +103,7 @@ export const courses: Course[] = [
         title: "Higiene y Seguridad",
         description: "La parte más importante: cómo montar una mesa estéril, cross-contamination, uso de guantes, plásticos protectores y gestión de residuos biológicos.",
         imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=2830&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "30 min",
         content: [
           {
@@ -165,7 +165,7 @@ export const courses: Course[] = [
         title: "El Equipo: Máquinas y Agujas",
         description: "Diferencias entre bobinas y rotativas. Tipos de agujas (RL, RS, M1, RM) y para qué sirve cada una. Cómo montar y calibrar correctamente.",
         imageUrl: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?q=80&w=2865&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "45 min",
         content: [
           {
@@ -221,7 +221,7 @@ export const courses: Course[] = [
         title: "Técnica de Línea Limpia",
         description: "Cómo coger la máquina, velocidad de paso, tensión de la piel y práctica sobre piel sintética para conseguir líneas sólidas y uniformes.",
         imageUrl: "https://images.unsplash.com/photo-1562962230-16e4623d36e6?q=80&w=2574&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "60 min",
         content: [
           {
@@ -273,7 +273,7 @@ export const courses: Course[] = [
         title: "Relleno Sólido y Curación",
         description: "Técnica de relleno por pasadas, evitar el sobretatuado, y cómo cuidar correctamente el tatuaje durante su cicatrización.",
         imageUrl: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?q=80&w=2670&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "45 min",
         content: [
           {
@@ -341,7 +341,7 @@ export const courses: Course[] = [
         title: "Introducción al Black & Grey",
         description: "Qué es el Black & Grey, historia, referentes del estilo y por qué es la base de todo buen tatuador.",
         imageUrl: "https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?q=80&w=2574&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "20 min",
         content: [
           {
@@ -389,7 +389,7 @@ export const courses: Course[] = [
         title: "Diluyentes y Gamas de Grises",
         description: "Cómo preparar tu paleta de greywash: agua destilada vs. diluyentes comerciales. Escalas de grises del 10% al 100% de negro.",
         imageUrl: "https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2670&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "30 min",
         content: [
           {
@@ -437,7 +437,7 @@ export const courses: Course[] = [
         title: "Agujas Planas y Magnum",
         description: "Uso de curvas magnums (CM), flat magnums y soft edge. Cómo afectan al resultado final y cuándo usar cada configuración.",
         imageUrl: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?q=80&w=2865&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "35 min",
         content: [
           {
@@ -488,7 +488,7 @@ export const courses: Course[] = [
         title: "Whip Shading",
         description: "La técnica de arrastre o puntillismo de arrastre para crear transiciones naturales y texturas suaves. Práctica intensiva.",
         imageUrl: "https://images.unsplash.com/photo-1562962230-16e4623d36e6?q=80&w=2574&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "60 min",
         content: [
           {
@@ -536,7 +536,7 @@ export const courses: Course[] = [
         title: "Volumetría y Luz",
         description: "Cómo leer la luz de una referencia, dónde colocar los puntos de luz más brillantes y cómo construir el volumen de una figura.",
         imageUrl: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?q=80&w=2670&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "50 min",
         content: [
           {
@@ -584,7 +584,7 @@ export const courses: Course[] = [
         title: "Proyecto Final: Pieza Completa",
         description: "Aplicación de todas las técnicas en una pieza de sombreado completa sobre piel sintética, con feedback y correcciones.",
         imageUrl: "https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?q=80&w=2574&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "90 min",
         content: [
           {
@@ -644,7 +644,7 @@ export const courses: Course[] = [
         title: "Fundamentos del Realismo",
         description: "Qué diferencia al realismo de otros estilos. Referencias fotográficas, análisis de luz y composición avanzada.",
         imageUrl: "https://images.unsplash.com/photo-1562962230-16e4623d36e6?q=80&w=2574&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "25 min",
         content: [
           {
@@ -692,7 +692,7 @@ export const courses: Course[] = [
         title: "Preparación del Diseño",
         description: "Cómo seleccionar y editar una fotografía de referencia, contraste, niveles y conversión a stencil con software profesional.",
         imageUrl: "https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2670&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "40 min",
         content: [
           {
@@ -740,7 +740,7 @@ export const courses: Course[] = [
         title: "Textura de Piel y Poros",
         description: "Técnica específica para replicar la textura de la piel humana, poros, arrugas y cicatrices de forma hiperrealista.",
         imageUrl: "https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?q=80&w=2574&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "55 min",
         content: [
           {
@@ -788,7 +788,7 @@ export const courses: Course[] = [
         title: "Textura de Pelo y Animales",
         description: "Stroke by stroke: cómo tatuar pelo de forma individual para conseguir naturalidad. Aplicado a retratos de animales y humanos.",
         imageUrl: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?q=80&w=2670&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "70 min",
         content: [
           {
@@ -836,7 +836,7 @@ export const courses: Course[] = [
         title: "Retrato: Los Ojos",
         description: "Los ojos son el alma de un retrato. Técnica detallada para iris, pupila, reflejo de luz y párpados con acabado hiperrealista.",
         imageUrl: "https://images.unsplash.com/photo-1562962230-16e4623d36e6?q=80&w=2574&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "80 min",
         content: [
           {
@@ -887,7 +887,7 @@ export const courses: Course[] = [
         title: "Alto Contraste y Durabilidad",
         description: "Cómo garantizar que el tatuaje perdure en el tiempo con negro opaco en sombras profundas y blancos limpios en los puntos de luz.",
         imageUrl: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?q=80&w=2865&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "45 min",
         content: [
           {
@@ -930,7 +930,7 @@ export const courses: Course[] = [
         title: "Composición Compleja",
         description: "Cómo abordar una pieza de gran formato con múltiples elementos. Jerarquía visual, flujo de la composición y uso del espacio negativo.",
         imageUrl: "https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2670&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "60 min",
         content: [
           {
@@ -973,7 +973,7 @@ export const courses: Course[] = [
         title: "Proyecto Final: Retrato Completo",
         description: "Desarrollo de un retrato realista completo desde cero, con revisiones en cada etapa y feedback personalizado.",
         imageUrl: "https://images.unsplash.com/photo-1562962230-16e4623d36e6?q=80&w=2574&auto=format&fit=crop",
-        videoId: "8E3ZPisPNKc",
+        videoPath: "curso-basico/video1.mp4",
         duration: "120 min",
         content: [
           {
