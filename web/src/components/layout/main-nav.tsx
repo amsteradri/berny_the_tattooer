@@ -26,6 +26,32 @@ export function MainNav() {
     { name: "Newsletter", href: "#newsletter" },
   ]
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
+    if (element) {
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+    setIsOpen(false);
+  };
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+    setIsOpen(false);
+  };
+
   return (
     <>
       <motion.header 
@@ -41,24 +67,25 @@ export function MainNav() {
         <div className="container mx-auto flex items-center justify-between px-4 md:px-8 relative h-16 w-full max-w-[1400px]">
           
           {/* Logo Area - moved more to the left */}
-          <Link href="/" className="flex items-center z-50 mr-8">
+          <a href="#" onClick={handleLogoClick} className="flex items-center z-50 mr-8 cursor-pointer">
             <span className="font-extrabold text-xl md:text-2xl tracking-tighter text-white uppercase italic">
               ART WORX ACADEMY<span className="text-primary-foreground/80">.</span>
             </span>
-          </Link>
+          </a>
 
           {/* Desktop Navigation - Centered */}
           <div className="hidden md:absolute md:left-1/2 md:-translate-x-1/2 md:flex items-center">
             <nav className="flex items-center gap-8">
             {navLinks.map((link) => (
-              <Link 
+              <a 
                 key={link.name} 
                 href={link.href}
-                className="text-sm font-medium text-zinc-400 hover:text-white transition-colors relative group"
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="text-sm font-medium text-zinc-400 hover:text-white transition-colors relative group cursor-pointer"
               >
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full"></span>
-              </Link>
+              </a>
             ))}
             </nav>
           </div>
@@ -92,14 +119,14 @@ export function MainNav() {
           >
              <nav className="flex flex-col gap-6 items-center w-full mt-8">
                {navLinks.map((link) => (
-                <Link 
+                <a 
                   key={link.name} 
                   href={link.href} 
-                  onClick={() => setIsOpen(false)}
-                  className="text-3xl font-black text-white hover:text-zinc-400 transition-colors uppercase tracking-tight"
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  className="text-3xl font-black text-white hover:text-zinc-400 transition-colors uppercase tracking-tight cursor-pointer"
                 >
                   {link.name}
-                </Link>
+                </a>
               ))}
              </nav>
              

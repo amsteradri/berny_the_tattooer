@@ -9,6 +9,21 @@ import BlurText from "@/components/react-bits/BlurText"
 import ShinyText from "@/components/react-bits/ShinyText"
 
 export function HeroSection() {
+
+    const scrollToSection = (id: string) => {
+        const element = document.getElementById(id);
+        if (element) {
+            const headerOffset = 80;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+            });
+        }
+    };
+
     return (
         <section className="relative w-full h-screen flex items-center justify-center bg-zinc-950 text-white overflow-hidden pt-20 md:pt-24">
             {/* Background Texture/Gradient */}
@@ -56,12 +71,14 @@ export function HeroSection() {
 
                
                <div className="flex flex-col sm:flex-row justify-center gap-4 pt-8">
-                   <Button size="lg" className="text-lg px-8 py-6 rounded-full bg-white text-black hover:bg-gray-200 transition-all font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)]">
+                   <Button onClick={() => scrollToSection('cursos')} size="lg" className="text-lg px-8 py-6 rounded-full bg-white text-black hover:bg-zinc-200 hover:text-black transition-all font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)]">
                        Ver Cursos Disponibles
                    </Button>
-                   <Button variant="outline" size="lg" className="text-lg px-8 py-6 rounded-full border-2 border-white bg-transparent text-white hover:bg-white hover:text-black transition-all">
-                       Conoce ART WORX <ArrowRight className="ml-2 w-5 h-5" />
-                   </Button>
+                   <div onClick={() => scrollToSection('sobre-mi')} className="inline-block">
+                        <Button variant="outline" size="lg" className="text-lg px-8 py-6 rounded-full border-2 border-white bg-transparent text-white hover:bg-white hover:text-black transition-all cursor-pointer">
+                            Conoce ART WORX <ArrowRight className="ml-2 w-5 h-5" />
+                        </Button>
+                   </div>
                </div>
             </motion.div>
         </section>
