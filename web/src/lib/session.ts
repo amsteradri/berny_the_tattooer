@@ -2,7 +2,10 @@ import 'server-only'
 import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 
-const secretKey = process.env.SESSION_SECRET || 'clave-super-secreta-cambiala-en-prod'
+const secretKey = process.env.SESSION_SECRET
+if (!secretKey) {
+  throw new Error('SESSION_SECRET no está configurado. Añádelo a .env.local')
+}
 const key = new TextEncoder().encode(secretKey)
 
 export async function encrypt(payload: any) {
@@ -41,8 +44,8 @@ export async function getSession() {
   try {
     const payload = await decrypt(session)
     return payload
-  } catch (error) {
-    console.error('Failed to verify session', error)
+  } catch {
+    // Cookie inválida — el middleware se encarga de limpiarla
     return null
   }
 }

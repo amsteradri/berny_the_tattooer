@@ -8,10 +8,10 @@ import { motion, AnimatePresence } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { LogOut, User as UserIcon, BookOpen } from "lucide-react"
+import { LogOut, User as UserIcon, BookOpen, LayoutDashboard } from "lucide-react"
 
 interface MainNavProps {
-  user?: any; // We can improve type later
+  user?: { userId?: string; role?: string | null } | null
 }
 
 export function MainNav({ user }: MainNavProps) {
@@ -20,8 +20,7 @@ export function MainNav({ user }: MainNavProps) {
   const [scrolled, setScrolled] = React.useState(false)
   
   const hasSession = !!user;
-
-  console.log("MainNav Render - User Prop:", user);
+  const isAdmin = user?.role === 'admin'
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -131,6 +130,16 @@ export function MainNav({ user }: MainNavProps) {
                        <BookOpen size={16} /> Mis Cursos
                      </Button>
                    </Link>
+                   {isAdmin && (
+                     <Link href="/admin" passHref>
+                       <Button
+                         variant="ghost"
+                         className="text-zinc-300 hover:text-white hover:bg-white/10 font-medium gap-2"
+                       >
+                         <LayoutDashboard size={16} /> Admin
+                       </Button>
+                     </Link>
+                   )}
                    <Link href="/perfil" passHref>
                      <Button 
                         className="bg-white text-black hover:bg-zinc-200 transition-transform hover:scale-105 font-bold rounded-full px-6 gap-2"
@@ -206,6 +215,17 @@ export function MainNav({ user }: MainNavProps) {
                           <BookOpen size={20} /> Mis Cursos
                        </Button>
                      </Link>
+                     {isAdmin && (
+                       <Link href="/admin" onClick={() => setIsOpen(false)} passHref>
+                         <Button
+                           variant="outline"
+                           size="lg"
+                           className="w-full border-zinc-700 text-white bg-transparent hover:bg-zinc-800 text-lg py-6 gap-3"
+                         >
+                           <LayoutDashboard size={20} /> Panel Admin
+                         </Button>
+                       </Link>
+                     )}
                      <Link href="/perfil" onClick={() => setIsOpen(false)} passHref>
                        <Button 
                             size="lg" 

@@ -4,27 +4,46 @@ import type { NextRequest } from 'next/server'
 import { decrypt } from '@/lib/session'
 import { cookies } from 'next/headers'
 
-// Rutas 100% protegidas (ejemplo)
+// Rutas que requieren sesión activa
 const protectedRoutes = ['/perfil', '/mis-cursos']
-const publicRoutes = ['/login', '/signup', '/']
+// Rutas solo para admins
+const adminRoutes = ['/admin']
+// Rutas solo para usuarios sin sesión (login/signup)
+const authOnlyRoutes = ['/login', '/signup']
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
-  const isPublicRoute = publicRoutes.includes(path)
 
   const cookie = (await cookies()).get('session')?.value
-  const session = cookie ? await decrypt(cookie) : null
+  let session = null
+  if (cookie) {
+    try {
+      session = await decrypt(cookie)
+    } catch {
+      // Cookie inválida o firmada con secreto antiguo — la eliminamos aquí
+      const response = NextResponse.next()
+      response.cookies.delete('session')
+      return response
+    }
+  }
 
-  // 1. Si intenta ir a ruta protegida y no tiene sesión -> Login
+  const isProtectedRoute = protectedRoutes.some(r => path === r || path.startsWith(r + '/'))
+  const isAdminRoute = adminRoutes.some(r => path === r || path.startsWith(r + '/'))
+  const isAuthOnlyRoute = authOnlyRoutes.includes(path)
+
+  // 1. Ruta de usuario autenticado sin sesión → Login
   if (isProtectedRoute && !session?.userId) {
     return NextResponse.redirect(new URL('/login', req.nextUrl))
   }
 
-  // 2. Si intenta ir a login/signup y YA tiene sesión -> Dashboard
-  if (isPublicRoute && session?.userId && !path.startsWith('/') && path !== '/') {
-    // Si estuviéramos en /login o /signup lo mandaríamos a /perfil o /
-     return NextResponse.redirect(new URL('/perfil', req.nextUrl))
+  // 2. Ruta de admin — requiere sesión (el rol se verifica en cada server action/page)
+  if (isAdminRoute && !session?.userId) {
+    return NextResponse.redirect(new URL('/login', req.nextUrl))
+  }
+
+  // 3. Login/Signup con sesión activa → Inicio
+  if (isAuthOnlyRoute && session?.userId) {
+    return NextResponse.redirect(new URL('/', req.nextUrl))
   }
 
   return NextResponse.next()

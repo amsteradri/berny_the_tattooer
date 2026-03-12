@@ -1,5 +1,5 @@
 // src/app/cursos/[slug]/page.tsx
-import { courses } from "@/lib/courses-data";
+import { courses as hardcodedCourses } from "@/lib/courses-data";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
@@ -11,9 +11,13 @@ import { enrollCourse } from "@/app/actions/courses";
 import { getSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { EnrollButton } from "@/components/courses/enroll-button";
+import { BuyButton } from "@/components/courses/buy-button";
+
+// Permite rutas generadas dinámicamente por el admin además de las estáticas
+export const dynamicParams = true
 
 export async function generateStaticParams() {
-  return courses.map((course) => ({
+  return hardcodedCourses.map((course) => ({
     slug: course.slug,
   }));
 }
@@ -26,36 +30,53 @@ interface PageProps {
 
 export default async function CoursePage({ params }: PageProps) {
   const { slug } = await params;
-  const course = courses.find((c) => c.slug === slug);
 
-  if (!course) {
-    notFound();
+  // Buscar en DB primero (fuente de verdad para precio y disponibilidad)
+  const { data: dbCourse } = await db
+    .from('courses')
+    .select('id, title, slug, description, long_description, image, level, price_cents, duration_text, tags, techniques, material, is_published')
+    .eq('slug', slug)
+    .single()
+
+  // Si no está en DB o no está publicado, 404
+  if (!dbCourse || !dbCourse.is_published) {
+    notFound()
+  }
+
+  // Para el contenido rico (secciones, técnicas, etc.) usamos los datos hardcodeados si existen
+  const hardcoded = hardcodedCourses.find((c) => c.slug === slug)
+
+  // Unificamos datos: DB para precio/disponibilidad, hardcoded para contenido detallado
+  const course = {
+    ...dbCourse,
+    title: hardcoded?.title || dbCourse.title,
+    description: hardcoded?.description || dbCourse.description,
+    longDescription: hardcoded?.longDescription || dbCourse.long_description || dbCourse.description,
+    image: hardcoded?.image || dbCourse.image,
+    level: hardcoded?.level || dbCourse.level || '',
+    price: hardcoded?.price || `${Math.round((dbCourse.price_cents || 0) / 100)}€`,
+    duration: hardcoded?.duration || dbCourse.duration_text || '',
+    tags: (hardcoded?.tags?.length ? hardcoded.tags : dbCourse.tags) || [],
+    techniques: (hardcoded?.techniques?.length ? hardcoded.techniques : dbCourse.techniques) || [],
+    material: (hardcoded?.material?.length ? hardcoded.material : dbCourse.material) || [],
+    sections: hardcoded?.sections || [],
   }
 
   const session = await getSession();
   let isEnrolled = false;
+  let enrollmentId: string | null = null;
   
   if (session?.userId) {
-    // Check if course exists in DB first (sync with hardcoded data)
-    let { data: dbCourse } = await db
-        .from('courses')
-        .select('id')
-        .eq('slug', slug)
-        .single();
-    
-    // If course not in DB, fallback to not enrolled (or handle sync)
-    // Here we assume it exists if user ran the SQL.
-    if (dbCourse) {
-        const { data: enrollment } = await db
-            .from('user_courses')
-            .select('id')
-            .eq('user_id', session.userId)
-            .eq('course_id', dbCourse.id)
-            .single();
-        
-        if (enrollment) {
-            isEnrolled = true;
-        }
+    const { data: enrollment } = await db
+      .from('user_courses')
+      .select('id')
+      .eq('user_id', session.userId)
+      .eq('course_id', dbCourse.id)
+      .single()
+
+    if (enrollment) {
+      isEnrolled = true
+      enrollmentId = enrollment.id
     }
   }
 
@@ -80,7 +101,7 @@ export default async function CoursePage({ params }: PageProps) {
             </Link>
             <div className="flex flex-wrap gap-3 mb-4">
                 <Badge className="bg-white text-black hover:bg-zinc-200 text-base py-1 px-4">{course.level}</Badge>
-                {course.tags.map(tag => (
+                {course.tags.map((tag: string) => (
                    <Badge key={tag} variant="outline" className="text-zinc-300 border-zinc-700">{tag}</Badge>
                 ))}
             </div>
@@ -106,10 +127,11 @@ export default async function CoursePage({ params }: PageProps) {
                   </section>
 
                   {/* What you'll learn */}
+                  {course.techniques.length > 0 && (
                   <section>
                       <h2 className="text-2xl font-bold mb-6">¿Qué aprenderás?</h2>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {course.techniques.map((tech, index) => (
+                          {course.techniques.map((tech: string, index: number) => (
                               <div key={index} className="flex items-start bg-zinc-900 border border-zinc-800 p-4 rounded-xl">
                                   <CheckCircle className="text-green-500 mr-3 mt-1 h-5 w-5 shrink-0" />
                                   <span className="text-zinc-200">{tech}</span>
@@ -117,15 +139,17 @@ export default async function CoursePage({ params }: PageProps) {
                           ))}
                       </div>
                   </section>
+                  )}
 
                   {/* Material Needed */}
+                  {course.material.length > 0 && (
                   <section>
                       <h2 className="text-2xl font-bold mb-6 flex items-center">
                            <PenTool className="mr-3 text-primary" />
                            Material Necesario
                       </h2>
                       <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          {course.material.map((item, index) => (
+                          {course.material.map((item: string, index: number) => (
                               <li key={index} className="flex items-center text-zinc-300">
                                   <span className="w-2 h-2 bg-zinc-500 rounded-full mr-3" />
                                   {item}
@@ -133,6 +157,7 @@ export default async function CoursePage({ params }: PageProps) {
                           ))}
                       </ul>
                   </section>
+                  )}
               </div>
 
               {/* Sidebar / Sticky Card */}
@@ -161,10 +186,10 @@ export default async function CoursePage({ params }: PageProps) {
                                         </Button>
                                     </Link>
                                   ) : (
-                                    <EnrollButton slug={course.slug} />
+                                    <BuyButton slug={course.slug} price={course.price} />
                                   )}
                                   <p className="text-xs text-center text-zinc-500">
-                                      {isEnrolled ? "Ya tienes acceso a este curso." : "Acceso inmediato al contenido teórico."}
+                                      {isEnrolled ? "Ya tienes acceso a este curso." : "Acceso inmediato tras el pago. Pago seguro con Stripe."}
                                   </p>
                               </div>
                           </CardContent>

@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { BookOpen, PlayCircle } from "lucide-react"
+import { PaymentStatusBanner } from "@/components/courses/payment-status-banner"
+import { Suspense } from "react"
 
 export default async function MyCoursesPage() {
   const session = await getSession()
@@ -27,13 +29,17 @@ export default async function MyCoursesPage() {
   return (
     <div className="min-h-screen bg-zinc-950 text-white pb-20 px-4 md:px-8">
       <div className="container mx-auto max-w-6xl pt-12">
-        <div className="flex items-center gap-4 mb-16
-        ">
+        <div className="flex items-center gap-4 mb-8">
             <div className="p-3 bg-zinc-900 rounded-full border border-zinc-800">
                 <BookOpen className="w-6 h-6 text-white" />
             </div>
             <h1 className="text-3xl md:text-4xl font-black tracking-tight">Mis Cursos</h1>
         </div>
+
+        {/* Banner de estado del pago — useSearchParams requiere Suspense */}
+        <Suspense fallback={null}>
+          <PaymentStatusBanner />
+        </Suspense>
 
         {myCourses.length > 0 ? (
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

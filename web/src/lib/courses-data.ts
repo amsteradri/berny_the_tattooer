@@ -21,7 +21,9 @@ export interface Course {
   slug: string;
   level: string;
   description: string;
-  price: string;
+  price: string;          // Precio formateado para mostrar en UI, ej. "197€"
+  priceInCents: number;   // Precio en céntimos para Stripe, ej. 19700
+  stripePriceId?: string; // Price ID de Stripe (se crea en el dashboard), ej. "price_xxxx"
   duration: string;
   material: string[];
   techniques: string[];
@@ -39,6 +41,8 @@ export const courses: Course[] = [
     level: "Principiante",
     description: "Todo lo que necesitas saber antes de coger una máquina. Higiene, materiales y diseño básico.",
     price: "197€",
+    priceInCents: 19700,
+    // stripePriceId: "price_xxxx", // Añadir cuando se cree el precio en Stripe dashboard
     duration: "4 Semanas",
     material: ["Máquina de bobinas básica o rotativa", "Piel sintética de práctica", "Agujas de línea (3RL, 5RL)", "Tinta negra de práctica", "Vaselina y depresores", "Papel hectográfico"],
     techniques: ["Montaje y calibrado de máquina", "Higiene y seguridad (Cross-contamination)", "Técnica de línea limpia", "Relleno sólido básico", "Curación del tatuaje"],
@@ -329,6 +333,8 @@ export const courses: Course[] = [
     level: "Intermedio",
     description: "Domina el Black & Grey. Aprende a crear volúmenes, texturas y transiciones suaves.",
     price: "247€",
+    priceInCents: 24700,
+    // stripePriceId: "price_xxxx", // Añadir cuando se cree el precio en Stripe dashboard
     duration: "6 Semanas",
     material: ["Máquina rotativa o tipo Pen", "Set de tintas (Greywash)", "Diluyente (Mixing solution)", "Agujas Magnum (7M, 9M) y RM", "Piel sintética de alta calidad"],
     techniques: ["Black & Grey", "Whip Shading (Puntillismo de arrastre)", "Degradados suaves", "Volumetría y luz", "Uso correcto de diluyentes"],
@@ -632,6 +638,8 @@ export const courses: Course[] = [
     level: "Avanzado",
     description: "Lleva tu arte al siguiente nivel. Retratos, detalles hiperrealistas y composición compleja.",
     price: "397€",
+    priceInCents: 39700,
+    // stripePriceId: "price_xxxx", // Añadir cuando se cree el precio en Stripe dashboard
     duration: "8 Semanas",
     material: ["Máquina Pen de alta precisión", "Set profesional de tintas (Opaque Greys)", "Agujas de cartucho de alta gama (Soft Edge)", "Papel de calco de alta definición", "Impresora térmica (recomendado)"],
     techniques: ["Retrato realista", "Texturas complejas (pelo, piel, metal)", "Mapeo de sombras y luces", "Alto contraste", "Software de edición para stencil"],

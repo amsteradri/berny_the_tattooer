@@ -18,7 +18,7 @@ export default async function ProfilePage() {
 
   const { data: user, error } = await db
     .from('users')
-    .select('*')
+    .select('id, email, full_name, phone, created_at, role')
     .eq('id', session.userId)
     .single()
 

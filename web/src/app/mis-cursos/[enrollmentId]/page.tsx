@@ -29,8 +29,24 @@ export default async function CourseContentPage({ params }: PageProps) {
   const courseData = enrollment.course
   const localCourse = courses.find(c => c.slug === courseData.slug)
 
-  if (!localCourse) notFound()
+  // Intentar leer secciones desde la BD (cursos creados/editados desde el admin)
+  const { data: dbSections } = await db
+    .from('course_sections')
+    .select('*')
+    .eq('course_id', courseData.id)
+    .order('sort_order', { ascending: true })
 
+  // Preferir secciones de BD; si no hay, usar las hardcodeadas
+  const sections = dbSections && dbSections.length > 0
+    ? dbSections.map(s => ({
+        id: s.id,
+        title: s.title,
+        description: s.description ?? '',
+        videoPath: s.video_path ?? undefined,
+        duration: s.duration_text ?? '',
+        content: s.content ?? [],
+      }))
+    : (localCourse?.sections ?? [])
   const completedSections: string[] = enrollment.completed_sections || []
 
   return (
@@ -54,21 +70,31 @@ export default async function CourseContentPage({ params }: PageProps) {
               {courseData.level}
             </span>
             <span className="text-xs text-zinc-400 flex items-center gap-1">
-              <BookOpen className="w-3 h-3" /> {localCourse.sections.length} apartados
+              <BookOpen className="w-3 h-3" /> {sections.length} apartados
             </span>
           </div>
           <h1 className="text-2xl md:text-3xl font-black tracking-tight">{courseData.title}</h1>
         </div>
       </div>
 
-      {/* Accordion with progress — client component for instant feedback */}
-      <SectionAccordion
-        sections={localCourse.sections}
-        completedSections={completedSections}
-        enrollmentId={enrollmentId}
-        courseSlug={courseData.slug}
-        userEmail={session.userId}
-      />
+      {sections.length === 0 ? (
+        <div className="container mx-auto px-4 md:px-8 py-20 text-center">
+          <BookOpen className="w-12 h-12 text-zinc-700 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-zinc-400 mb-2">Contenido en preparación</h2>
+          <p className="text-zinc-500 max-w-md mx-auto">
+            El profesor está preparando el contenido de este curso. Vuelve pronto.
+          </p>
+        </div>
+      ) : (
+        /* Accordion with progress — client component for instant feedback */
+        <SectionAccordion
+          sections={sections}
+          completedSections={completedSections}
+          enrollmentId={enrollmentId}
+          courseSlug={courseData.slug}
+          userEmail={session.userId}
+        />
+      )}
     </div>
   )
 }

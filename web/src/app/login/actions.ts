@@ -18,15 +18,14 @@ export async function login(formData: FormData) {
     .single()
 
   if (error || !user) {
-    // Si no existe, error genérico
-    redirect('/?error=InvalidCredentials')
+    redirect('/login?error=invalid-credentials')
   }
 
   // 2. Verificar contraseña
   const passwordsMatch = await bcrypt.compare(password, user.password)
 
   if (!passwordsMatch) {
-    redirect('/?error=InvalidCredentials')
+    redirect('/login?error=invalid-credentials')
   }
 
   // 3. Crear sesión

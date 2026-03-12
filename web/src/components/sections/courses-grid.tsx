@@ -7,9 +7,23 @@ import Image from "next/image"
 import Link from "next/link"
 import SplitText from "@/components/react-bits/SplitText"
 import BlurText from "@/components/react-bits/BlurText"
-import { courses } from "@/lib/courses-data"
 
-export function CoursesGrid() {
+export interface CourseCardData {
+  id: string | number
+  slug: string
+  title: string
+  description: string
+  image: string
+  level: string
+  price: string   // formateado para UI, ej. "197€"
+  tags: string[]
+}
+
+interface CoursesGridProps {
+  courses: CourseCardData[]
+}
+
+export function CoursesGrid({ courses }: CoursesGridProps) {
   return (
     <section id="cursos" className="relative py-24 bg-zinc-50 overflow-hidden">
       <div className="container relative z-10 mx-auto px-4 md:px-6">
