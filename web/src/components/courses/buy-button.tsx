@@ -1,16 +1,33 @@
 'use client'
 
 import { useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { createCheckoutSession } from "@/app/actions/checkout"
 import { ShoppingCart, Loader2 } from "lucide-react"
 
 export function BuyButton({ slug, price }: { slug: string; price: string }) {
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
   const handleBuy = () => {
     startTransition(async () => {
-      await createCheckoutSession(slug)
+      const result = await createCheckoutSession(slug)
+
+      if (result?.error) {
+        console.error("Checkout error:", result.error)
+        window.alert(result.error)
+        return
+      }
+
+      if (result?.redirectTo) {
+        if (result.redirectTo.startsWith("http://") || result.redirectTo.startsWith("https://")) {
+          window.location.assign(result.redirectTo)
+          return
+        }
+
+        router.push(result.redirectTo)
+      }
     })
   }
 

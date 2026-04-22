@@ -7,13 +7,26 @@ import Link from "next/link"
 import { BookOpen, PlayCircle } from "lucide-react"
 import { PaymentStatusBanner } from "@/components/courses/payment-status-banner"
 import { Suspense } from "react"
+import { syncEnrollmentFromCheckoutSession } from "@/app/actions/checkout"
 
-export default async function MyCoursesPage() {
+interface MyCoursesPageProps {
+  searchParams: Promise<{ success?: string | string[]; session_id?: string | string[] }>
+}
+
+export default async function MyCoursesPage({ searchParams }: MyCoursesPageProps) {
   const session = await getSession()
   
   // Esto ya lo protege el middleware, pero doble seguridad no hace daño
   if (!session) {
     redirect('/login')
+  }
+
+  const query = await searchParams
+  const successParam = Array.isArray(query.success) ? query.success[0] : query.success
+  const sessionIdParam = Array.isArray(query.session_id) ? query.session_id[0] : query.session_id
+
+  if (successParam === '1' && sessionIdParam) {
+    await syncEnrollmentFromCheckoutSession(sessionIdParam)
   }
 
   const { data: enrolledCourses } = await db

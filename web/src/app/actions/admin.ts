@@ -209,6 +209,23 @@ export async function updateCourseAction(id: string, formData: FormData) {
 export async function togglePublishAction(id: string, publish: boolean) {
   await requireAdmin()
 
+  if (publish) {
+    const { data: course, error: readError } = await db
+      .from('courses')
+      .select('price_cents')
+      .eq('id', id)
+      .single()
+
+    if (readError) {
+      console.error('[Admin] Error validando precio antes de publicar:', readError)
+      return { error: 'No se pudo validar el precio del curso' }
+    }
+
+    if (!course?.price_cents || course.price_cents <= 0) {
+      return { error: 'No puedes publicar un curso sin precio válido (> 0)' }
+    }
+  }
+
   const { error } = await db
     .from('courses')
     .update({ is_published: publish })
